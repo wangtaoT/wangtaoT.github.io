@@ -108,24 +108,26 @@
 
 
 
-  <meta name="description" content="Android开发中很多时候需要使用第三方开源库，当它是用C++写的时就需要编译成SO库，本文就是编译之前需要做的准备！配置NDK、SDK环境！配置NDK、SDK环境！配置NDK、SDK环境！ 搭建虚拟机我在这里选择VMware12虚拟机VMware Workstation Pro下载地址 安装Linux系统选择Ubuntu下载地址 下载AndroidNDK及SDKandroid NDK选择Lin">
+  <meta name="description" content="应用内悬浮窗-自动贴边 无需权限！！！无需权限！！！无需权限！！！  效果  实现原理：获取当前activity的DecorView然后find到android.R.id.content，addView自己的view。  获取当前activity的content1234567891011private FrameLayout getActivityRoot(Activity activity) &amp;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android编译so库">
-<meta property="og:url" content="http://yoursite.com/2017/11/25/Android编译so库/index.html">
+<meta property="og:title" content="Android应用内悬浮窗">
+<meta property="og:url" content="http://yoursite.com/2019/04/22/Android应用内悬浮窗/index.html">
 <meta property="og:site_name" content="Wangtao&#39;s Blog">
-<meta property="og:description" content="Android开发中很多时候需要使用第三方开源库，当它是用C++写的时就需要编译成SO库，本文就是编译之前需要做的准备！配置NDK、SDK环境！配置NDK、SDK环境！配置NDK、SDK环境！ 搭建虚拟机我在这里选择VMware12虚拟机VMware Workstation Pro下载地址 安装Linux系统选择Ubuntu下载地址 下载AndroidNDK及SDKandroid NDK选择Lin">
+<meta property="og:description" content="应用内悬浮窗-自动贴边 无需权限！！！无需权限！！！无需权限！！！  效果  实现原理：获取当前activity的DecorView然后find到android.R.id.content，addView自己的view。  获取当前activity的content1234567891011private FrameLayout getActivityRoot(Activity activity) &amp;">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-10-21T07:24:26.044Z">
+<meta property="og:image" content="http://yoursite.com/2019/04/22/Android应用内悬浮窗/2019-02-16.gif">
+<meta property="og:updated_time" content="2019-04-22T07:45:27.626Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Android编译so库">
-<meta name="twitter:description" content="Android开发中很多时候需要使用第三方开源库，当它是用C++写的时就需要编译成SO库，本文就是编译之前需要做的准备！配置NDK、SDK环境！配置NDK、SDK环境！配置NDK、SDK环境！ 搭建虚拟机我在这里选择VMware12虚拟机VMware Workstation Pro下载地址 安装Linux系统选择Ubuntu下载地址 下载AndroidNDK及SDKandroid NDK选择Lin">
+<meta name="twitter:title" content="Android应用内悬浮窗">
+<meta name="twitter:description" content="应用内悬浮窗-自动贴边 无需权限！！！无需权限！！！无需权限！！！  效果  实现原理：获取当前activity的DecorView然后find到android.R.id.content，addView自己的view。  获取当前activity的content1234567891011private FrameLayout getActivityRoot(Activity activity) &amp;">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/22/Android应用内悬浮窗/2019-02-16.gif">
 
 
 
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/11/25/Android编译so库/">
+  <link rel="canonical" href="http://yoursite.com/2019/04/22/Android应用内悬浮窗/">
 
 
 
@@ -135,7 +137,7 @@
   };
 </script>
 
-  <title>Android编译so库 | Wangtao's Blog</title>
+  <title>Android应用内悬浮窗 | Wangtao's Blog</title>
   
 
 
@@ -284,7 +286,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/25/Android编译so库/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/22/Android应用内悬浮窗/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="wangtao">
@@ -301,7 +303,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Android编译so库
+          <h1 class="post-title" itemprop="name headline">Android应用内悬浮窗
               
             
           </h1>
@@ -326,24 +328,12 @@
                 
               
 
-              <time title="Created: 2017-11-25 15:10:30" itemprop="dateCreated datePublished" datetime="2017-11-25T15:10:30+08:00">2017-11-25</time>
+              <time title="Created: 2019-04-22 15:43:39 / Modified: 15:45:27" itemprop="dateCreated datePublished" datetime="2019-04-22T15:43:39+08:00">2019-04-22</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2018-10-21 15:24:26" itemprop="dateModified" datetime="2018-10-21T15:24:26+08:00">2018-10-21</time>
               
             
           </span>
@@ -376,30 +366,23 @@
       
 
       
-        <p>Android开发中很多时候需要使用第三方开源库，当它是用C++写的时就需要编译成SO库，本文就是编译之前需要做的准备！<br>配置NDK、SDK环境！<br>配置NDK、SDK环境！<br>配置NDK、SDK环境！</p>
-<h3 id="搭建虚拟机"><a href="#搭建虚拟机" class="headerlink" title="搭建虚拟机"></a>搭建虚拟机</h3><p>我在这里选择VMware12虚拟机VMware Workstation Pro<a href="https://www.vmware.com/cn.html" target="_blank" rel="noopener">下载地址</a></p>
-<h3 id="安装Linux系统"><a href="#安装Linux系统" class="headerlink" title="安装Linux系统"></a>安装Linux系统</h3><p>选择Ubuntu<a href="http://www.ubuntu.org.cn/download/desktop" target="_blank" rel="noopener">下载地址</a></p>
-<h3 id="下载AndroidNDK及SDK"><a href="#下载AndroidNDK及SDK" class="headerlink" title="下载AndroidNDK及SDK"></a>下载AndroidNDK及SDK</h3><p>android NDK选择Linux版本。<a href="https://developer.android.google.cn/ndk/downloads/index.html" target="_blank" rel="noopener">下载地址</a><br>android SDK选择高一点的Linux版本。<a href="http://tools.android-studio.org/index.php/sdk/" target="_blank" rel="noopener">下载地址</a></p>
-<blockquote>
-<p>下载完成后在目录下会看到我们下载的ndk和sdk压缩包我们把它们解压出来，一个是.zip的另一个是.tgz的。</p>
+        <h2 id="应用内悬浮窗-自动贴边"><a href="#应用内悬浮窗-自动贴边" class="headerlink" title="应用内悬浮窗-自动贴边"></a>应用内悬浮窗-自动贴边</h2><blockquote>
+<p>无需权限！！！<br>无需权限！！！<br>无需权限！！！</p>
 </blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unzip xxx.zip</span><br><span class="line">tar zxvf xxx.taz</span><br></pre></td></tr></table></figure>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p><img src="/2019/04/22/Android应用内悬浮窗/2019-02-16.gif" alt=""></p>
 <blockquote>
-<p>将两个压缩文件解压到当前目录即可。</p>
+<p>实现原理：获取当前activity的DecorView然后find到android.R.id.content，addView自己的view。</p>
 </blockquote>
-<h3 id="下载openjdk"><a href="#下载openjdk" class="headerlink" title="下载openjdk"></a>下载openjdk</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install openjdk-8-jre-headless</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>会自动安装</p>
+<p>获取当前activity的content<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private FrameLayout getActivityRoot(Activity activity) &#123;</span><br><span class="line">        if (activity == null) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            return (FrameLayout) activity.getWindow().getDecorView().findViewById(android.R.id.content);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h3><h4 id="FloatingManage"><a href="#FloatingManage" class="headerlink" title="FloatingManage"></a>FloatingManage</h4><blockquote>
+<p>主要为悬浮窗的管理类，包括设置头像、弹出内容、显示与隐藏。</p>
 </blockquote>
-<h3 id="配置SDK和NDK全局环境变量"><a href="#配置SDK和NDK全局环境变量" class="headerlink" title="配置SDK和NDK全局环境变量"></a>配置SDK和NDK全局环境变量</h3><p>下载的linux版本的SDK缺少一点东西，需要运行命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh /android-sdk-linux/tools/android</span><br></pre></td></tr></table></figure></p>
-<p>下载最新的Android SDK Tools、Android SDK Platform-tools、Android SDK Build-tools、Android SDK Platform即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo gedit /etc/profile</span><br></pre></td></tr></table></figure></p>
-<p>在文件最后加上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export PATH=/你的路径/android-sdk-linux/platform-tools:$PATH</span><br><span class="line">export PATH=/你的路径/android-sdk-linux/tools:$PATH</span><br><span class="line">export ANDROID_NDK=/你的路径/android-ndk-r14b</span><br><span class="line">export PATH=/你的路径/android-ndk-r14b:$PATH</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>路径可能会有所不同！</p>
+<h4 id="FloatRootView、FloatView"><a href="#FloatRootView、FloatView" class="headerlink" title="FloatRootView、FloatView"></a>FloatRootView、FloatView</h4><blockquote>
+<p>主要为悬浮窗的页面布局和拖动、点按事件的监听操作的实现。</p>
 </blockquote>
-<hr>
-<p><strong>重启系统</strong>既可以生效</p>
-<p><strong>接下来就可以编译你的ANdroid SO库了!!!</strong></p>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><blockquote>
+<p>Demo已上传Github如需要可下载<a href="https://github.com/wangtaoT/FloatingView" target="_blank" rel="noopener">https://github.com/wangtaoT/FloatingView</a></p>
+</blockquote>
 
       
     </div>
@@ -427,8 +410,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/25/Android-OCR之Tess-two/" rel="next" title="Android OCR之Tess-two">
-                <i class="fa fa-chevron-left"></i> Android OCR之Tess-two
+              <a href="/2018/05/18/Android多渠道打包-变种打包配置/" rel="next" title="Android多渠道打包-变种打包配置">
+                <i class="fa fa-chevron-left"></i> Android多渠道打包-变种打包配置
               </a>
             
           </div>
@@ -436,10 +419,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/05/18/Android多渠道打包-变种打包配置/" rel="prev" title="Android多渠道打包-变种打包配置">
-                Android多渠道打包-变种打包配置 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -549,7 +528,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建虚拟机"><span class="nav-number">1.</span> <span class="nav-text">搭建虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Linux系统"><span class="nav-number">2.</span> <span class="nav-text">安装Linux系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载AndroidNDK及SDK"><span class="nav-number">3.</span> <span class="nav-text">下载AndroidNDK及SDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载openjdk"><span class="nav-number">4.</span> <span class="nav-text">下载openjdk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置SDK和NDK全局环境变量"><span class="nav-number">5.</span> <span class="nav-text">配置SDK和NDK全局环境变量</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#应用内悬浮窗-自动贴边"><span class="nav-number">1.</span> <span class="nav-text">应用内悬浮窗-自动贴边</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#效果"><span class="nav-number">1.1.</span> <span class="nav-text">效果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现方法"><span class="nav-number">1.2.</span> <span class="nav-text">实现方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#FloatingManage"><span class="nav-number">1.2.1.</span> <span class="nav-text">FloatingManage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FloatRootView、FloatView"><span class="nav-number">1.2.2.</span> <span class="nav-text">FloatRootView、FloatView</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结果"><span class="nav-number">1.3.</span> <span class="nav-text">结果</span></a></li></ol></li></ol></div>
             
 
           </div>

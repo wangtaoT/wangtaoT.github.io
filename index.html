@@ -284,6 +284,162 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/22/Android应用内悬浮窗/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wangtao">
+      <meta itemprop="description" content="技术分享">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wangtao's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/04/22/Android应用内悬浮窗/" itemprop="url">
+                  Android应用内悬浮窗
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-04-22 15:43:39 / Modified: 15:45:27" itemprop="dateCreated datePublished" datetime="2019-04-22T15:43:39+08:00">2019-04-22</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="应用内悬浮窗-自动贴边"><a href="#应用内悬浮窗-自动贴边" class="headerlink" title="应用内悬浮窗-自动贴边"></a>应用内悬浮窗-自动贴边</h2><blockquote>
+<p>无需权限！！！<br>无需权限！！！<br>无需权限！！！</p>
+</blockquote>
+<h3 id="效果"><a href="#效果" class="headerlink" title="效果"></a>效果</h3><p><img src="/2019/04/22/Android应用内悬浮窗/2019-02-16.gif" alt=""></p>
+<blockquote>
+<p>实现原理：获取当前activity的DecorView然后find到android.R.id.content，addView自己的view。</p>
+</blockquote>
+<p>获取当前activity的content<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private FrameLayout getActivityRoot(Activity activity) &#123;</span><br><span class="line">        if (activity == null) &#123;</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            return (FrameLayout) activity.getWindow().getDecorView().findViewById(android.R.id.content);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h3><h4 id="FloatingManage"><a href="#FloatingManage" class="headerlink" title="FloatingManage"></a>FloatingManage</h4><blockquote>
+<p>主要为悬浮窗的管理类，包括设置头像、弹出内容、显示与隐藏。</p>
+</blockquote>
+<h4 id="FloatRootView、FloatView"><a href="#FloatRootView、FloatView" class="headerlink" title="FloatRootView、FloatView"></a>FloatRootView、FloatView</h4><blockquote>
+<p>主要为悬浮窗的页面布局和拖动、点按事件的监听操作的实现。</p>
+</blockquote>
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><blockquote>
+<p>Demo已上传Github如需要可下载<a href="https://github.com/wangtaoT/FloatingView" target="_blank" rel="noopener">https://github.com/wangtaoT/FloatingView</a></p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/18/Android多渠道打包-变种打包配置/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -881,7 +1037,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -925,7 +1081,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
