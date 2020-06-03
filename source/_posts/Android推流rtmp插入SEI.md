@@ -5,13 +5,13 @@ tags: rtmp推流 SEI
 ---
 ## Android MediaCodec编码 推流rtmp 插入SEI
 
-### 插入SEI基于rtmp推流开源项目[yasea](https://github.com/begeekmyfriend/yasea)实现
+### 该插入SEI方法，可用于开源项目[yasea](https://github.com/begeekmyfriend/yasea) & [rtmp-rtsp-stream-client-java](https://github.com/pedroSG94/rtmp-rtsp-stream-client-java)
 
 > 当前项封装成flv进行推流。所以要在flv中插入SEI自定义信息  
 > 当前实现的是在每个关键帧中插入SEI时间戳（也可插入其他自定义信息）
 
 
-#### 修改文件为[SrsFlvMuxer.java](https://github.com/begeekmyfriend/yasea/blob/master/library/src/main/java/net/ossrs/yasea/SrsFlvMuxer.java#L876)    
+#### 修改文件为[yasea->SrsFlvMuxer.java](https://github.com/begeekmyfriend/yasea/blob/master/library/src/main/java/net/ossrs/yasea/SrsFlvMuxer.java#L876)&[rtmp-rtsp-stream-client-java->SrsFlvMuxer.java](https://github.com/pedroSG94/rtmp-rtsp-stream-client-java/blob/master/rtmp/src/main/java/net/ossrs/rtmp/SrsFlvMuxer.java#L935)
 
 修改的代码段如下
 
