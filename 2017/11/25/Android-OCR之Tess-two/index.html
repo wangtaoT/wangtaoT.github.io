@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"wangtaot.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.18.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="实现小猿搜题、作业帮类似效果。基于Google Tesseract-OCR实现，由于这是基于C++开发，Android中不能直接使用，所以本项目使用tess-two是对于Android的分支。 准备工作1）Android Studio导入gradle依赖（快速集成）1234&#x2F;&#x2F;编译好的SO库 和 jar包compile &amp;#x27;com.rmtheis:tess-two:6.1.1&amp;#x27;&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android OCR之Tess-two">
+<meta property="og:url" content="http://wangtaot.github.io/2017/11/25/Android-OCR%E4%B9%8BTess-two/index.html">
+<meta property="og:site_name" content="Wangtao&#39;s Blog">
+<meta property="og:description" content="实现小猿搜题、作业帮类似效果。基于Google Tesseract-OCR实现，由于这是基于C++开发，Android中不能直接使用，所以本项目使用tess-two是对于Android的分支。 准备工作1）Android Studio导入gradle依赖（快速集成）1234&#x2F;&#x2F;编译好的SO库 和 jar包compile &amp;#x27;com.rmtheis:tess-two:6.1.1&amp;#x27;&#x2F;">
+<meta property="og:locale">
+<meta property="og:image" content="http://wangtaot.github.io/2017/11/25/Android-OCR%E4%B9%8BTess-two/result.jpg">
+<meta property="article:published_time" content="2017-11-25T06:48:16.000Z">
+<meta property="article:modified_time" content="2023-09-12T02:12:13.654Z">
+<meta property="article:author" content="wangtao">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wangtaot.github.io/2017/11/25/Android-OCR%E4%B9%8BTess-two/result.jpg">
+
+
+<link rel="canonical" href="http://wangtaot.github.io/2017/11/25/Android-OCR%E4%B9%8BTess-two/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://wangtaot.github.io/2017/11/25/Android-OCR%E4%B9%8BTess-two/","path":"2017/11/25/Android-OCR之Tess-two/","title":"Android OCR之Tess-two"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Android OCR之Tess-two | Wangtao's Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GH7RKS5K0L"></script>
+  <script class="next-config" data-name="google_analytics" type="application/json">{"tracking_id":"G-GH7RKS5K0L","only_pageview":false}</script>
+  <script src="/js/third-party/analytics/google-analytics.js"></script>
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Wangtao's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Android Developer</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%EF%BC%89Android-Studio%E5%AF%BC%E5%85%A5gradle%E4%BE%9D%E8%B5%96%EF%BC%88%E5%BF%AB%E9%80%9F%E9%9B%86%E6%88%90%EF%BC%89"><span class="nav-number">1.1.</span> <span class="nav-text">1）Android Studio导入gradle依赖（快速集成）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%EF%BC%89%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%96%B9%E6%B3%95-%E8%87%AA%E5%B7%B1%E7%BC%96%E8%AF%91%E6%BA%90%E7%A0%81%EF%BC%88%EF%BC%81%EF%BC%81%EF%BC%81%EF%BC%89"><span class="nav-number">1.2.</span> <span class="nav-text">2）第二种方法 自己编译源码（！！！）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tess-two%E4%BD%BF%E7%94%A8"><span class="nav-number">2.</span> <span class="nav-text">tess-two使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C"><span class="nav-number">3.</span> <span class="nav-text">结果</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">wangtao</p>
+  <div class="site-description" itemprop="description">技术分享</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://wangtaot.github.io/2017/11/25/Android-OCR%E4%B9%8BTess-two/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="wangtao">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Wangtao's Blog">
+      <meta itemprop="description" content="技术分享">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Android OCR之Tess-two | Wangtao's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android OCR之Tess-two
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2017-11-25 14:48:16" itemprop="dateCreated datePublished" datetime="2017-11-25T14:48:16+08:00">2017-11-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2023-09-12 10:12:13" itemprop="dateModified" datetime="2023-09-12T10:12:13+08:00">2023-09-12</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>实现小猿搜题、作业帮类似效果。<br>基于Google Tesseract-OCR实现，由于这是基于C++开发，Android中不能直接使用，所以本项目使用tess-two是对于Android的分支。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="1）Android-Studio导入gradle依赖（快速集成）"><a href="#1）Android-Studio导入gradle依赖（快速集成）" class="headerlink" title="1）Android Studio导入gradle依赖（快速集成）"></a>1）Android Studio导入gradle依赖（快速集成）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//编译好的SO库 和 jar包</span><br><span class="line">compile &#x27;com.rmtheis:tess-two:6.1.1&#x27;</span><br><span class="line">//图像裁剪</span><br><span class="line">compile &#x27;com.edmodo:cropper:1.0.1&#x27; </span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其实也可以自己下载<a target="_blank" rel="noopener" href="https://github.com/rmtheis/tess-two">https://github.com/rmtheis/tess-two</a> 源码在Linux环境中进行编译。</p>
+</blockquote>
+<h3 id="2）第二种方法-自己编译源码（！！！）"><a href="#2）第二种方法-自己编译源码（！！！）" class="headerlink" title="2）第二种方法 自己编译源码（！！！）"></a>2）第二种方法 自己编译源码（！！！）</h3><ul>
+<li>安装虚拟机VMware</li>
+<li>安装linux系统Ubunt</li>
+<li>安装必要工具</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<ul>
+<li>配置JDK、NDK、SDK环境（踩了一万个坑）<a href="https://wangtaot.github.io/2017/11/25/Android%E7%BC%96%E8%AF%91so%E5%BA%93/">具体教程地址</a></li>
+<li>下载tess-two代码</li>
+<li>开始编译(依次输入以下两行命令)</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /tess/tess-two/jni</span><br><span class="line">ndk-build</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用<br>将编译好的tess-two目录复制到自己项目的libraries下，将项目下的app关联 libraries。</li>
+</ul>
+<hr>
+<h2 id="tess-two使用"><a href="#tess-two使用" class="headerlink" title="tess-two使用"></a>tess-two使用</h2><ul>
+<li><p>数据字典下载，在app&#x2F;main目录下新建assets目录，从<a target="_blank" rel="noopener" href="https://github.com/tesseract-ocr/tessdata">https://github.com/tesseract-ocr/tessdata</a>  下载对应语言的字典库。</p>
+</li>
+<li><p>MainActivity.java</p>
+</li>
+</ul>
+<blockquote>
+<p>主要就是将assets中的字典文件写到手机文件目录</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 将assets中的文件复制出</span><br><span class="line"> *</span><br><span class="line"> * @param path</span><br><span class="line"> */</span><br><span class="line">public void deepFile(String path) &#123;</span><br><span class="line">    String newPath = getExternalFilesDir(null) + &quot;/&quot;;</span><br><span class="line">    try &#123;</span><br><span class="line">        String str[] = getAssets().list(path);</span><br><span class="line">        if (str.length &gt; 0) &#123;//如果是目录</span><br><span class="line">            File file = new File(newPath + path);</span><br><span class="line">            file.mkdirs();</span><br><span class="line">            for (String string : str) &#123;</span><br><span class="line">                path = path + &quot;/&quot; + string;</span><br><span class="line">                deepFile(path);</span><br><span class="line">                path = path.substring(0, path.lastIndexOf(&#x27;/&#x27;));//回到原来的path</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; else &#123;//如果是文件</span><br><span class="line">            InputStream is = getAssets().open(path);</span><br><span class="line">            FileOutputStream fos = new FileOutputStream(new File(newPath + path));</span><br><span class="line">            byte[] buffer = new byte[1024];</span><br><span class="line">            int count = 0;</span><br><span class="line">            while (true) &#123;</span><br><span class="line">                count++;</span><br><span class="line">                int len = is.read(buffer);</span><br><span class="line">                if (len == -1) &#123;</span><br><span class="line">                    break;</span><br><span class="line">                &#125;</span><br><span class="line">                fos.write(buffer, 0, len);</span><br><span class="line">            &#125;</span><br><span class="line">            is.close();</span><br><span class="line">            fos.close();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>点击跳转到拍照界面</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public void onClick(View view) &#123;</span><br><span class="line">        switch (view.getId()) &#123;</span><br><span class="line">            case R.id.btn_camera:</span><br><span class="line">                Intent intent = new Intent(this, TakePhoteActivity.class);</span><br><span class="line">                startActivity(intent);</span><br><span class="line">                break;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>TakePhoteActivity.java 主要执行拍照、裁剪操作。</li>
+</ul>
+<blockquote>
+<p>以下是拍照成功后回掉接口，拍照成功后显示剪裁界面</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * 拍照成功后回调</span><br><span class="line">    * 存储图片并显示截图界面</span><br><span class="line">    *</span><br><span class="line">    * @param data</span><br><span class="line">    */</span><br><span class="line">   @Override</span><br><span class="line">   public void onCameraStopped(byte[] data) &#123;</span><br><span class="line">       Log.i(&quot;TAG&quot;, &quot;==onCameraStopped==&quot;);</span><br><span class="line">       // 创建图像</span><br><span class="line">       Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);</span><br><span class="line">       // 系统时间</span><br><span class="line">       long dateTaken = System.currentTimeMillis();</span><br><span class="line">       // 图像名称</span><br><span class="line">       String filename = DateFormat.format(&quot;yyyy-MM-dd kk.mm.ss&quot;, dateTaken).toString() + &quot;.jpg&quot;;</span><br><span class="line">       // 存储图像（PATH目录）</span><br><span class="line">       Uri source = insertImage(getContentResolver(), filename, dateTaken, PATH, filename, bitmap, data);</span><br><span class="line">       //准备截图</span><br><span class="line">       try &#123;</span><br><span class="line">           mCropImageView.setImageBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), source));</span><br><span class="line">       &#125; catch (IOException e) &#123;</span><br><span class="line">           Log.e(TAG, e.getMessage());</span><br><span class="line">       &#125;</span><br><span class="line">       showCropperLayout();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>剪裁操作，完成后跳转到识别界面</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">private View.OnClickListener cropcper = new View.OnClickListener() &#123;</span><br><span class="line">        @Override</span><br><span class="line">        public void onClick(View view) &#123;</span><br><span class="line">            switch (view.getId()) &#123;</span><br><span class="line">                case R.id.btn_closecropper:</span><br><span class="line">                    showTakePhotoLayout();</span><br><span class="line">                    break;</span><br><span class="line">                case R.id.btn_startcropper:</span><br><span class="line">                    //获取截图并旋转90度</span><br><span class="line">                    Bitmap cropperBitmap = mCropImageView.getCroppedImage();</span><br><span class="line">                    Bitmap bitmap = Utils.rotate(cropperBitmap, -90);</span><br><span class="line">                    // 系统时间</span><br><span class="line">                    long dateTaken = System.currentTimeMillis();</span><br><span class="line">                    // 图像名称</span><br><span class="line">                    String filename = DateFormat.format(&quot;yyyy-MM-dd kk.mm.ss&quot;, dateTaken).toString() + &quot;.jpg&quot;;</span><br><span class="line">                    Uri uri = insertImage(getContentResolver(), filename, dateTaken, PATH, filename, bitmap, null);</span><br><span class="line">                    Intent intent = new Intent(TakePhoteActivity.this, ShowCropperedActivity.class);</span><br><span class="line">                    intent.setData(uri);</span><br><span class="line">                    intent.putExtra(&quot;path&quot;, PATH + filename);</span><br><span class="line">                    intent.putExtra(&quot;width&quot;, bitmap.getWidth());</span><br><span class="line">                    intent.putExtra(&quot;height&quot;, bitmap.getHeight());</span><br><span class="line">//                  intent.putExtra(&quot;cropperImage&quot;, bitmap);</span><br><span class="line">                    startActivity(intent);</span><br><span class="line">                    bitmap.recycle();</span><br><span class="line">                    finish();</span><br><span class="line">                    break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ShowCropperedActivity.java 主要是识别操作</li>
+</ul>
+<blockquote>
+<p>初始化识别器</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//sd卡路径</span><br><span class="line">private static String LANGUAGE_PATH = &quot;&quot;;</span><br><span class="line">//识别语言</span><br><span class="line">private static final String LANGUAGE = &quot;chi_sim&quot;;//chi_sim | eng</span><br><span class="line">private TessBaseAPI baseApi = new TessBaseAPI();</span><br><span class="line">@Override</span><br><span class="line">protected void onCreate(Bundle savedInstanceState) &#123;</span><br><span class="line">    LANGUAGE_PATH = getExternalFilesDir(&quot;&quot;) + &quot;/&quot;;</span><br><span class="line">    </span><br><span class="line">    baseApi.init(LANGUAGE_PATH, LANGUAGE);</span><br><span class="line">    //设置设别模式</span><br><span class="line">    baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_AUTO);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>将图片灰度化处理，去除杂色可以提高准确度</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 灰度化处理</span><br><span class="line"> *</span><br><span class="line"> * @param bitmap3</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">public Bitmap convertGray(Bitmap bitmap3) &#123;</span><br><span class="line">    colorMatrix = new ColorMatrix();</span><br><span class="line">    colorMatrix.setSaturation(0);</span><br><span class="line">    ColorMatrixColorFilter filter = new ColorMatrixColorFilter(colorMatrix);</span><br><span class="line">    Paint paint = new Paint();</span><br><span class="line">    paint.setColorFilter(filter);</span><br><span class="line">    Bitmap result = Bitmap.createBitmap(bitmap3.getWidth(), bitmap3.getHeight(), Bitmap.Config.ARGB_8888);</span><br><span class="line">    Canvas canvas = new Canvas(result);</span><br><span class="line">    canvas.drawBitmap(bitmap3, 0, 0, paint);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>开始识别</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//传入图片</span><br><span class="line">baseApi.setImage(bitmap);</span><br><span class="line">//获取识别后的结果</span><br><span class="line">String result = baseApi.getUTF8Text();</span><br><span class="line">//结束识别</span><br><span class="line">baseApi.end();</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>Demo已上传Github如需要可下载<a target="_blank" rel="noopener" href="https://github.com/wangtaoT/AndroidOCR">https://github.com/wangtaoT/AndroidOCR</a><br><img src="/2017/11/25/Android-OCR%E4%B9%8BTess-two/result.jpg"> </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2017/11/25/Android%E7%BC%96%E8%AF%91so%E5%BA%93/" rel="next" title="Android编译so库">
+                  Android编译so库 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">wangtao</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
